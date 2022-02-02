@@ -28,7 +28,7 @@ public class TestPubSubConfig {
     private final String subscriptionName;
     private final PubSubResourceGenerator pubSubResourceGenerator;
     private final GcpPubSubProperties gcpPubSubProperties;
-    private GenericContainer pubsubContainer;
+//    private GenericContainer pubsubContainer;
 
     TestPubSubConfig(PubSubResourceGenerator pubSubResourceGenerator, GcpPubSubProperties gcpPubSubProperties, DemoConfig config) {
         this.pubSubResourceGenerator = pubSubResourceGenerator;
@@ -40,27 +40,27 @@ public class TestPubSubConfig {
     @PostConstruct
     void createResources() {
         int pubsubPort = 8085;
-        pubsubContainer =
-            new FixedHostPortGenericContainer("google/cloud-sdk:latest")
-                .withFixedExposedPort(pubsubPort, pubsubPort)
-                .withExposedPorts(pubsubPort)
-                .withCommand(
-                    "/bin/sh",
-                    "-c",
-                    String.format(
-                        "gcloud beta emulators pubsub start --project %s --host-port=0.0.0.0:%d",
-                        gcpPubSubProperties.getProjectId(), pubsubPort)
-                )
-                .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*started.*$"));
-
-        pubsubContainer.start();
+//        pubsubContainer =
+//            new FixedHostPortGenericContainer("google/cloud-sdk:latest")
+//                .withFixedExposedPort(pubsubPort, pubsubPort)
+//                .withExposedPorts(pubsubPort)
+//                .withCommand(
+//                    "/bin/sh",
+//                    "-c",
+//                    String.format(
+//                        "gcloud beta emulators pubsub start --project %s --host-port=0.0.0.0:%d",
+//                        gcpPubSubProperties.getProjectId(), pubsubPort)
+//                )
+//                .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*started.*$"));
+//
+//        pubsubContainer.start();
         pubSubResourceGenerator.createTopic(topicName);
         pubSubResourceGenerator.createSubscription(topicName, subscriptionName);
     }
 
     @PreDestroy
     void destroyResources() {
-        pubsubContainer.stop();
+//        pubsubContainer.stop();
     }
 
     @Bean
